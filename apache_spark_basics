@@ -1,0 +1,66 @@
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import col, expr, when
+
+# Initialize Spark session
+spark = SparkSession.builder.appName("SparkTransformations").getOrCreate()
+
+# Load data into a Spark DataFrame
+df = spark.read.csv("big_data.csv", header=True, inferSchema=True)
+
+# 1. Selecting Columns: Extracting specific columns from the DataFrame
+selected_columns = df.select("column1", "column2")
+
+# 2. Filtering Rows: Selecting rows based on a condition
+filtered_data = df.filter(col("column1") > 10)
+
+# 3. GroupBy and Aggregation: Grouping data by a column and performing aggregate calculations
+grouped_data = df.groupBy("column1").agg({"column2": "sum"})
+
+# 4. Applying Functions: Applying custom functions to DataFrame columns
+df = df.withColumn("new_column", col("column1") * 2)
+
+# 5. Join Operations: Combining two DataFrames based on a common column
+df1 = spark.read.csv("table1.csv", header=True, inferSchema=True)
+df2 = spark.read.csv("table2.csv", header=True, inferSchema=True)
+merged_df = df1.join(df2, df1.common_column == df2.common_column, "inner")
+
+# 6. Sorting Data: Sorting DataFrame rows based on one or more columns
+sorted_df = df.orderBy("column1", "column2")
+
+# 7. Handling Missing Values: Filling or dropping missing values in a DataFrame
+df = df.fillna(0)  # Filling null values with 0
+df = df.dropna()   # Dropping rows with null values
+
+# 8. String Operations: Performing string manipulations on DataFrame columns
+df = df.withColumn("new_column", expr("UPPER(column1)"))
+
+# 9. Applying Window Functions: Calculating window-based operations
+from pyspark.sql.window import Window
+from pyspark.sql.functions import row_number
+window_spec = Window.orderBy("column1")
+df = df.withColumn("row_num", row_number().over(window_spec))
+
+# 10. Pivot Table: Creating a pivot table from a DataFrame
+pivot_table = df.groupBy("row_index").pivot("column_index").sum("value")
+
+# 11. Reshaping Data: Melting or stacking DataFrame for better analysis
+melted_df = df.selectExpr("common_column", "stack(2, 'variable1', variable2) as (variable, value)")
+
+# 12. Handling DateTime: Converting and manipulating date and time data
+df = df.withColumn("datetime_column", df["datetime_column"].cast("timestamp"))
+df = df.withColumn("month", expr("MONTH(datetime_column)"))
+
+# 13. Creating Dummy Variables: Converting categorical variables into binary dummy variables
+from pyspark.ml.feature import OneHotEncoder, StringIndexer
+indexer = StringIndexer(inputCol="category_column", outputCol="category_index")
+encoder = OneHotEncoder(inputCol="category_index", outputCol="category_dummy")
+df = encoder.fit(indexer.fit(df).transform(df)).transform(df)
+
+# 14. Data Sampling: Randomly sampling rows from a DataFrame
+sampled_df = df.sample(withReplacement=False, fraction=0.1, seed=42)
+
+# 15. Exporting Data: Writing DataFrame to a Parquet file
+df.write.parquet("output_data.parquet")
+
+# Stop Spark session
+spark.stop()
