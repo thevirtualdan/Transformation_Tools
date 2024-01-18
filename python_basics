@@ -1,0 +1,62 @@
+# 1. Data Loading: Reading data from a CSV file into a Pandas DataFrame
+import pandas as pd
+df = pd.read_csv('data.csv')
+
+# 2. Data Exploration: Displaying basic information about the DataFrame
+print(df.info())
+
+# 3. Selecting Columns: Extracting specific columns from the DataFrame
+selected_columns = df[['column1', 'column2']]
+
+# 4. Filtering Rows: Selecting rows based on a condition
+filtered_data = df[df['column1'] > 10]
+
+# 5. GroupBy and Aggregation: Grouping data by a column and performing aggregate calculations
+grouped_data = df.groupby('column1').agg({'column2': 'sum'})
+
+# 6. Applying Functions: Applying custom functions to DataFrame columns
+df['new_column'] = df['column1'].apply(lambda x: x * 2)
+
+# 7. Merging DataFrames: Combining two DataFrames based on a common column
+merged_df = pd.merge(df1, df2, on='common_column', how='inner')
+
+# 8. Concatenating DataFrames: Combining DataFrames along rows or columns
+concatenated_df = pd.concat([df1, df2], axis=0)
+
+# 9. Sorting Data: Sorting DataFrame rows based on one or more columns
+sorted_df = df.sort_values(by=['column1', 'column2'], ascending=[True, False])
+
+# 10. Handling Missing Values: Filling or dropping missing values in a DataFrame
+df.fillna(0, inplace=True)  # Filling NaN values with 0
+df.dropna(inplace=True)     # Dropping rows with NaN values
+
+# 11. String Operations: Performing string manipulations on DataFrame columns
+df['new_column'] = df['column1'].str.upper()
+
+# 12. Applying Regular Expressions: Extracting information using regex patterns
+df['extracted_value'] = df['column1'].str.extract(r'(\d+)')
+
+# 13. Pivot Table: Creating a pivot table from a DataFrame
+pivot_table = pd.pivot_table(df, values='value', index='row_index', columns='column_index', aggfunc='sum')
+
+# 14. Reshaping Data: Melting or stacking DataFrame for better analysis
+melted_df = pd.melt(df, id_vars=['common_column'], value_vars=['variable1', 'variable2'])
+
+# 15. Handling DateTime: Converting and manipulating date and time data
+df['datetime_column'] = pd.to_datetime(df['datetime_column'])
+df['month'] = df['datetime_column'].dt.month
+
+# 16. Applying Window Functions: Calculating rolling averages or other window-based operations
+df['rolling_average'] = df['value'].rolling(window=3).mean()
+
+# 17. Creating Dummy Variables: Converting categorical variables into binary dummy variables
+dummy_df = pd.get_dummies(df['category_column'], prefix='category')
+
+# 18. Combining Columns: Concatenating multiple columns into a single column
+df['combined_column'] = df['column1'].astype(str) + '-' + df['column2'].astype(str)
+
+# 19. Data Sampling: Randomly sampling rows from a DataFrame
+sampled_df = df.sample(n=100, random_state=42)
+
+# 20. Exporting Data: Writing DataFrame to a CSV file
+df.to_csv('output_data.csv', index=False)
