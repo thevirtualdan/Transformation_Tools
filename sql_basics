@@ -1,0 +1,76 @@
+-- 1. SELECT Statement: Extracting data from a table
+-- Used to retrieve specific columns from a table based on specified conditions.
+
+SELECT column1, column2
+FROM table_name
+WHERE condition;
+
+-- 2. Aggregate Functions: Calculating counts, sums, averages, etc.
+-- Used for summarizing data by performing calculations on groups of rows.
+
+SELECT COUNT(column) AS count_column
+FROM table_name;
+
+-- 3. GROUP BY Clause: Grouping rows based on specified columns
+-- Used to group rows that have the same values in specified columns and perform aggregate calculations.
+
+SELECT column1, COUNT(*)
+FROM table_name
+GROUP BY column1;
+
+-- 4. CASE Statement: Conditional logic within SQL queries
+-- Used for introducing conditional logic into SELECT statements, assigning values based on specified conditions.
+
+SELECT column1,
+       CASE
+          WHEN condition1 THEN result1
+          WHEN condition2 THEN result2
+          ELSE result3
+       END AS new_column
+FROM table_name;
+
+-- 5. JOIN Operations: Combining rows from multiple tables
+-- Used to merge data from two or more tables based on related columns.
+
+SELECT *
+FROM table1
+INNER JOIN table2 ON table1.column = table2.column;
+
+-- 6. UNION and UNION ALL: Combining result sets and handling duplicates
+-- UNION combines result sets, removing duplicates, while UNION ALL includes all rows, even duplicates.
+
+SELECT column1 FROM table1
+UNION
+SELECT column1 FROM table2;
+
+-- 7. Window Functions: Performing calculations across specified rows
+-- Used to perform calculations across a set of rows related to the current row.
+
+SELECT column1, column2,
+       ROW_NUMBER() OVER (PARTITION BY column1 ORDER BY column2) AS row_num
+FROM table_name;
+
+-- 8. String Functions: Manipulating and formatting text data
+-- Used for various string manipulations, such as concatenation, substring extraction, and case changes.
+
+SELECT CONCAT(first_name, ' ', last_name) AS full_name
+FROM employees;
+
+-- 9. NULL Functions: Handling NULL values
+-- COALESCE returns the first non-NULL expression, providing a default value for NULLs.
+
+SELECT column1, COALESCE(column2, 'Default') AS result
+FROM table_name;
+
+-- 10. PIVOT and UNPIVOT: Transforming data between row-level and columnar formats
+-- PIVOT transforms row-level data into columns, and UNPIVOT performs the reverse transformation.
+
+SELECT *
+FROM (
+   SELECT column1, column2, column3
+   FROM table_name
+) AS source_table
+PIVOT (
+   SUM(column3)
+   FOR column2 IN ([Value1], [Value2], [Value3])
+) AS pivot_table;
