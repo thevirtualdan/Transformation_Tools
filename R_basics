@@ -1,0 +1,66 @@
+# 1. Data Loading: Reading data from a CSV file into a data frame
+df <- read.csv('data.csv')
+
+# 2. Data Exploration: Displaying basic information about the data frame
+str(df)
+summary(df)
+
+# 3. Selecting Columns: Extracting specific columns from the data frame
+selected_columns <- df[c('column1', 'column2')]
+
+# 4. Filtering Rows: Selecting rows based on a condition
+filtered_data <- subset(df, column1 > 10)
+
+# 5. GroupBy and Aggregation: Grouping data by a column and performing aggregate calculations
+grouped_data <- aggregate(column2 ~ column1, data=df, sum)
+
+# 6. Applying Functions: Applying custom functions to data frame columns
+df$new_column <- sapply(df$column1, function(x) x * 2)
+
+# 7. Merging Data Frames: Combining two data frames based on a common column
+merged_df <- merge(df1, df2, by='common_column')
+
+# 8. Sorting Data: Sorting data frame rows based on one or more columns
+sorted_df <- df[order(df$column1, df$column2), ]
+
+# 9. Handling Missing Values: Filling or dropping missing values in a data frame
+df[is.na(df)] <- 0  # Filling NAs with 0
+df <- na.omit(df)   # Dropping rows with NAs
+
+# 10. String Operations: Performing string manipulations on data frame columns
+df$new_column <- toupper(df$column1)
+
+# 11. Applying Regular Expressions: Extracting information using regex patterns
+df$extracted_value <- gsub('.*(\\d+).*', '\\1', df$column1)
+
+# 12. Pivot Table: Creating a pivot table from a data frame
+library(reshape2)
+pivot_table <- dcast(df, row_index ~ column_index, value.var='value', fun.aggregate=sum)
+
+# 13. Reshaping Data: Melting or stacking data frame for better analysis
+melted_df <- melt(df, id.vars='common_column', measure.vars=c('variable1', 'variable2'))
+
+# 14. Handling DateTime: Converting and manipulating date and time data
+df$datetime_column <- as.POSIXct(df$datetime_column, format='%Y-%m-%d %H:%M:%S')
+df$month <- format(df$datetime_column, '%m')
+
+# 15. Applying Window Functions: Calculating rolling averages or other window-based operations
+library(zoo)
+df$rolling_average <- rollmean(df$value, k=3, fill=NA)
+
+# 16. Creating Dummy Variables: Converting categorical variables into binary dummy variables
+dummy_df <- model.matrix(~category_column - 1, data=df)
+
+# 17. Combining Columns: Concatenating multiple columns into a single column
+df$combined_column <- paste(df$column1, df$column2, sep='-')
+
+# 18. Data Sampling: Randomly sampling rows from a data frame
+set.seed(42)
+sampled_df <- df[sample(nrow(df), 100), ]
+
+# 19. Data Visualization: Creating basic plots for data exploration
+library(ggplot2)
+ggplot(df, aes(x=column1, y=column2)) + geom_point()
+
+# 20. Exporting Data: Writing data frame to a CSV file
+write.csv(df, 'output_data.csv', row.names=FALSE)
